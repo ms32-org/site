@@ -345,7 +345,7 @@ body {
             <button class="btn" type="submit">Send</button>
         </form>
 
-        <form action="/open" method="POST" id="url-form">
+        <form action="/url" method="POST" id="url-form">
             <input type="url" class="text" name="url" placeholder="Enter URL" required>
             <button class="btn" type="submit">Open</button>
         </form>
@@ -410,7 +410,7 @@ body {
             if (file) {
                 const formData = new FormData();
                 formData.append("file", file);
-                const response = await fetch("/sounds", {
+                const response = await fetch("/audio", {
                     method: "POST",
                     body: formData
                 });         

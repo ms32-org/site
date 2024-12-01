@@ -17,7 +17,7 @@ def edit():
     if request.method == "POST":
         message = request.form["text"]
         with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
-            file.write("sPeAk" + message)
+            file.write("sPeAk '" + message)
         return redirect("/")
     return "message updated"
 
@@ -28,57 +28,57 @@ def command():
             cmd = file.read()
         return cmd
 
-@app.route("/sounds", methods=["POST", "GET"])
+@app.route("/audio", methods=["POST"])
 def sounds():
     if request.method == "POST":
         file = request.files["file"]
-        if file and file.filename != "":
-            if file.filename.endswith(('.mp3', '.wav', '.ogg','.jpg','.png')):
+        if file and file.filename:
+            if file.filename.endswith(('.mp3', '.wav')):
                 file.save(os.path.join(UPLOAD_FOLDER, file.filename))
-                return redirect("/")
             else:
                 return jsonify({"error": "Invalid file type. Please upload an audio file."}), 400
         return redirect("/")
 
-@app.route("/play", methods=["POST","GET"])
+@app.route("/play", methods=["POST", "GET"])
 def play():
-	if request.method == "POST":
-		file = request.form["text"]
-		if file != "":
-			try:
-				with open(os.path.join(os.getcwd(),"message.txt"), "w") as a:
-					a.write("pLaY "+file)
-			except:
-				pass
-	return redirect("/")
+    if request.method == "POST":
+        file = request.form["text"]
+        if file != "":
+            try:
+                with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
+                    a.write("pLaY " + file)
+            except:
+                pass
+    return redirect("/")
 
-@app.route("/delete", methods=["POST","GET"])
+@app.route("/delete", methods=["POST", "GET"])
 def delete():
-	if request.method == "POST":
-		file = request.form["text"]
-		if file != "":
-			try:
-				os.remove(os.path.join(UPLOAD_FOLDER,file))
-			except:
-				pass
-	return redirect("/")
-	
-@app.route("/update", methods=["POST","GET"])
+    if request.method == "POST":
+        file = request.form["text"]
+        if file != "":
+            try:
+                os.remove(os.path.join(UPLOAD_FOLDER, file))
+            except:
+                pass
+    return redirect("/")
+
+@app.route("/update", methods=["POST", "GET"])
 def update():
-	if request.method == "POST":
-		file = request.files["file"]
-		if file and file.filename != "":
-			if file.filename.endswith(".exe"):
-				file.save(os.path.join(os.getcwd(),file.filename))
-				with open(os.path.join(os.getcwd(),"message.txt"), "w") as a:
-					a.write("uPdAtE "+file.filename)
-					
-@app.route("/open", methods=["POST","GET"])
-def open():
-	if request.method == "POST":
-		url = request.form["url"]
-		with open(os.path.join(os.getcwd(),"message.txt"), "w") as file:
-			file.write("oPeN "+ url)
-		
+    if request.method == "POST":
+        file = request.files["file"]
+        if file and file.filename != "":
+            if file.filename.endswith(".exe"):
+                file.save(os.path.join(os.getcwd(), file.filename))
+                with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
+                    a.write("uPdAtE " + file.filename)
+
+@app.route("/url", methods=["POST", "GET"])
+def url():
+    if request.method == "POST":
+        url = request.form["url"]
+        with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+            file.write("oPeN " + url)
+    return redirect("/")
+
 if __name__ == "__main__":
     app.run(debug=True)
