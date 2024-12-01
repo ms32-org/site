@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS32</title>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Include FontAwesome for play button icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+
+    /* Global Styles */
+    *,
+    html {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Silkscreen', monospace;
+        background-color: #0d1117;
+        color: #c9d1d9;
+        overflow-y: scroll;
+        height: 100%;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 300px;
+        height: 100%;
+        background-color: #161b22;
+        box-shadow: -5px 0 10px rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        color: #f0f6fc;
+        overflow-y: hidden;
+        padding-bottom: 100px;
+    }
+
+    .sidebar-header {
+        font-size: 1.8em;
+        text-align: center;
+        border-bottom: 2px solid #c9d1d9;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Audio Item Styles */
+    .audio-item {
+        background-color: #21262d;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .audio-item span {
+        flex: 1 1 auto;
+        word-wrap: break-word;
+        margin-right: 10px;
+        min-width: 0;
+    }
+
+    .audio-item:hover {
+        background-color: #30363d;
+    }
+
+    .audio-item .play-btn,
+    .audio-item .delete-btn {
+        background-color: #238636;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+    }
+
+    .audio-item .play-btn {
+        margin-right: 10px;
+    }
+
+    /* Change delete button to red */
+    .audio-item .delete-btn {
+        background-color: #d73a49;
+    }
+
+    .audio-item .delete-btn:hover {
+        background-color: #bf2a3f;
+    }
+
+    /* Centered Container Styles */
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Textarea Styles */
+    textarea.text {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #30363d;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #0d1117;
+        color: #f0f6fc;
+        resize: none;
+    }
+
+    /* Button Styles */
+    button.btn,
+    .file-label-green,
+    .upload-btn,
+    .update-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Upload Button Styles */
+    .upload-btn {
+        background-color: #007bff;
+        color: white;
+        width: 200px;
+        margin-bottom: 10px;
+    }
+
+    .upload-btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* Update Button Styles */
+    .update-btn {
+        background-color: #238636;
+        color: white;
+    }
+
+    .update-btn:hover {
+        background-color: #2ea043;
+    }
+
+    /* File Input Hidden */
+    input.file-input {
+        display: none;
+    }
+
+    /* Bottom Left Position for Buttons */
+    .bottom-left {        
+        bottom:20px;
+        left: 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    /* Status Style */
+    .status {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 14px;
+        color: #8b949e;
+    }
+
+.bottom-left {
+    
+    bottom: 20px;
+    right:100px;
+    left: 20px;
+    display: flex;
+    flex-direction: column; /* Stacking buttons vertically */
+    gap: 10px;
+    align-items: flex-end;
+}
+
+
+    /* File Upload Label & Button */
+    .file-label-green {
+        background-color: #238636;
+        color: white;
+        padding: 10px 20px;
+        display: block;
+        text-align: center;
+        border-radius: 5px;
+        width: 200px;
+        margin-bottom: 10px;
+    }
+
+    .file-label-green:hover {
+        background-color: #2ea043;
+    }
+
+    /* Make Audio List Scrollable and fill available space */
+    .audio-list {
+        max-height: calc(100% - 120px); /* Adjust based on other elements height */
+        overflow-y: auto;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    /* Keep the sidebar content fixed */
+    .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex-grow: 1;
+    }
+/* Add space between each form element in the container */
+.container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Add gap between form elements */
+}
+
+.text {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #0d1117;
+    color: #f0f6fc;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    resize: none;
+}
+#message-form {
+    margin-bottom: 30px; /* Add more space after the message form */
+}
+button.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #238636;
+    color: white;
+}
+
+button.btn:hover {
+    background-color: #2ea043;
+}
+
+input[type="url"] {
+    padding: 10px;
+    border: 1px solid #30363d;
+    background-color: #0d1117;
+    color: #f0f6fc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+/* Left Sidebar Styles */
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0; /* Position to the left side */
+    width: 300px;
+    height: 100%;
+    background-color: #161b22;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #f0f6fc;
+    overflow-y: hidden;
+    padding-bottom: 100px;
+}
+
+.left-sidebar .sidebar-header {
+    font-size: 1.8em;
+    text-align: center;
+    border-bottom: 2px solid #c9d1d9;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Bottom Fixed for Schedule Button */
+.bottom-fixed {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Schedule Button Styles */
+.schedule-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #238636;
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
+.schedule-btn:hover {
+    background-color: #2ea043;
+}
+
+body {
+    margin-left: 320px; 
+}
+
+   
+</style>
+<body>
+    <div class="container">
+        <form action="/edit" method="POST" id="message-form">
+            <textarea placeholder="Type something..." class="text" name="text"></textarea>
+            <button class="btn" type="submit">Send</button>
+        </form>
+
+        <form action="/open" method="POST" id="url-form">
+            <input type="url" class="text" name="url" placeholder="Enter URL" required>
+            <button class="btn" type="submit">Open</button>
+        </form>
+    </div>
+
+    <div class="status">Offline</div>
+
+
+<div class="left-sidebar">
+        <div class="sidebar-header">Schedule Task</div>
+        <div class="sidebar-content">
+        </div>
+
+        <div class="bottom-fixed">
+            <form action="/schedule-task" method="POST">
+                <button class="btn schedule-btn" type="submit">Schedule</button>
+            </form>
+        </div>
+    </div>
+    <div class="bottom-left">
+        <label for="fileInput" class="file-label">Choose File</label>
+        <input type="file" class="file-input" id="fileInput">
+        <button class="update-btn" onclick="updateFile()">Update</button>
+    </div>    
+    <div class="sidebar">
+        <div class="sidebar-header">Audio Files</div>
+        <div class="sidebar-content">
+            <div class="audio-list">
+                {% for file in files %}
+                    <div class="audio-item">
+                        <span>{{file}}</span>
+                        <div>
+                            <form action="/play" method="POST" style="display:inline;">
+                                <input type="hidden" name="text" value="{{ file }}">
+                                <button class="play-btn"><i class="fas fa-play"></i></button>
+                            </form>
+                            <form action="/delete" method="POST" style="display:inline;">
+                                <input type="hidden" name="text" value="{{ file }}">
+                                <button class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="bottom-fixed" style="display: flex; flex-direction: column; align-items: center;">
+                <form id="audio-form">
+                    <label for="aduio-input" class="file-label-green">Choose File</label>
+                    <input type="file" id="aduio-input" class="file-input" required>
+                    <button class="upload-btn" type="submit">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio_form = document.getElementById('audio-form');
+        const aduio = document.getElementById('aduio-input');
+
+        audio_form.addEventListener("submit", async (e) => {
+            const file = aduio.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+                const response = await fetch("/sounds", {
+                    method: "POST",
+                    body: formData
+                });         
+            }
+        });
+    </script>
+</body>
+
+</html>
