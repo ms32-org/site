@@ -52,6 +52,8 @@ def command():
 		
 		        with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
 		            json.dump(tasks, file, indent=4)
+		with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+        	file.write("")           
 
         return cmd
 
