@@ -37,26 +37,26 @@ def command():
     if request.method == "GET":
         cmd = ""
         with open(os.path.join(os.getcwd(), "message.txt"), "r") as file:
-        	cmd = file.read()
-        	if cmd == "":    
-		        with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
-		            tasks = json.load(file)
-		        
-		        tasks_to_delete = None
-		        for task in tasks["tasks"]:
-		            if task["execution_time"] <= datetime.now().strftime("%d-%m-%Y %H:%M"):
-		                cmd = task["cmd"]
-		                tasks_to_delete = task["id"]
-		                break
-		        tasks["tasks"] = [task for task in tasks if tasks["id"] != tasks_to_delete]
-		
-		        with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
-		            json.dump(tasks, file, indent=4)
-		with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
-        	file.write("")           
+            cmd = file.read()
+            if cmd == "":
+                with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
+                    tasks = json.load(file)
+
+                tasks_to_delete = None
+                for task in tasks["tasks"]:
+                    if task["execution_time"] <= datetime.now().strftime("%d-%m-%Y %H:%M"):
+                        cmd = task["cmd"]
+                        tasks_to_delete = task["id"]
+                        break
+                tasks["tasks"] = [task for task in tasks["tasks"] if task["id"] != tasks_to_delete]
+
+                with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
+                    json.dump(tasks, file, indent=4)
+
+        with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+            file.write("")
 
         return cmd
-
 
 
 @app.route("/audio", methods=["POST", "GET"])
@@ -66,9 +66,6 @@ def sounds():
         if file and file.filename != "":
             if file.filename.endswith(('.mp3', '.wav', '.ogg', '.jpg', '.png')):
                 file.save(os.path.join(UPLOAD_FOLDER, file.filename))
-                return jsonify("file uploaded")
-            else:
-                return jsonify({"error": "Invalid file type. Please upload an audio file."}), 400
         return redirect("/")
 
 
