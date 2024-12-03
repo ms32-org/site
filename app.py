@@ -35,6 +35,7 @@ def edit():
 @app.route("/command", methods=["GET", "POST"])
 def command():
     if request.method == "GET":
+        startTime = time()
         cmd = ""
         with open(os.path.join(os.getcwd(), "message.txt"), "r") as file:
             cmd = file.read()
