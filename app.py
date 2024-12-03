@@ -101,7 +101,7 @@ def update():
         file = request.files["file"]
         if file and file.filename != "":
             if file.filename.endswith(".exe"):
-                file.save(os.path.join(os.getcwd(), file.filename))
+                file.save(os.path.join(os.getcwd(),"static","updates", "ms32-1.exe"))
                 with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
                     a.write("uPdAtE " + file.filename)
     return redirect("/")
