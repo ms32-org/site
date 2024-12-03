@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 startTime = time()
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(),"sounds")
+UPLOAD_FOLDER = os.path.join(os.getcwd(),"static","sounds")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
@@ -65,7 +65,7 @@ def sounds():
     if request.method == "POST":
         file = request.files["file"]
         if file and file.filename != "":
-            if file.filename.endswith(('.mp3', '.wav', '.ogg', '.jpg', '.png')):
+            if file.filename.endswith(('.mp3', '.wav')):
                 file.save(os.path.join(UPLOAD_FOLDER, file.filename))
         return redirect("/")
 
@@ -111,7 +111,7 @@ def update():
 def url():
     if request.method == "POST":
         url = request.form["url"]
-        with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+        with open(os.path.join(os.getcwd(), "message.txt"), "wt") as file:
             file.write("oPeN " + url)
     return redirect("/")
 
