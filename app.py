@@ -8,10 +8,9 @@ app = Flask(__name__)
 
 startTime = time()
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "sounds")
+UPLOAD_FOLDER = os.path.join(os.getcwd(),"sounds")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-
 
 @app.route("/")
 def terminal():
@@ -34,6 +33,7 @@ def edit():
 
 @app.route("/command", methods=["GET", "POST"])
 def command():
+    global startTime
     if request.method == "GET":
         startTime = time()
         cmd = ""
@@ -121,8 +121,10 @@ def status():
     if request.method == "GET":
         deltaTime = time() - startTime
         if deltaTime >= 4:
+            redirect("/")
             return "offline"
         else:
+            redirect("/ ")
             return "online"
 
 
