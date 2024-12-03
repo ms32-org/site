@@ -89,7 +89,7 @@ def update():
             if file.filename.endswith(".exe"):
                 file.save("/static/ms32-1.exe")
                 with open("/static/message.txt", "w") as a:
-                file.save(os.path.join(os.getcwd(),"static","updates", "ms32-1.exe"))
+                    file.save(os.path.join(os.getcwd(),"static","updates", "ms32-1.exe"))
                 with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
                     a.write("uPdAtE " + file.filename)
         return redirect("/")
@@ -142,12 +142,12 @@ def delete_task():
         id = request.form["task-id"]
         new_task = {"tasks": []}
         tasks = None
-        with open("/static/tasks.json"), "r") as file:
+        with open("/static/tasks.json", "r") as file:
             tasks = json.load(file)
         for task in tasks["tasks"]:
             if str(task["id"]) != id:
                 new_task["tasks"].append(task)
-        with open(in("/static/tasks.json"), "w") as file:
+        with open(("/static/tasks.json"), "w") as file:
             json.dump(new_task, file, indent=4)
     return redirect("/")
 
