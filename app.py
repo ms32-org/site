@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 startTime = time()
 
-# Change the UPLOAD_FOLDER path to /tmp (writable directory in Vercel
 UPLOAD_FOLDER = os.path.join("/tmp", "sounds")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
