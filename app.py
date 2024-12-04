@@ -20,7 +20,6 @@ def terminal():
 
     return render_template("index.html", files=files, tasks=data)
 
-
 @app.route("/edit", methods=["POST", "GET"])
 def edit():
     if request.method == "POST":
