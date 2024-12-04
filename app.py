@@ -8,14 +8,15 @@ app = Flask(__name__)
 
 startTime = time()
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(),"static","sounds")
+# Change the UPLOAD_FOLDER path to /tmp (writable directory in Vercel)
+UPLOAD_FOLDER = os.path.join("/tmp", "sounds")
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 @app.route("/")
 def terminal():
     files = os.listdir(UPLOAD_FOLDER)
-    with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
+    with open(os.path.join("/tmp", "tasks.json"), "r") as file:
         data = json.load(file)
 
     return render_template("index.html", files=files, tasks=data)
@@ -25,7 +26,7 @@ def terminal():
 def edit():
     if request.method == "POST":
         message = request.form["text"]
-        with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+        with open(os.path.join("/tmp", "message.txt"), "w") as file:
             file.write("sPeAk" + message)
         return redirect("/")
     return "message updated"
@@ -37,10 +38,10 @@ def command():
     if request.method == "GET":
         startTime = time()
         cmd = ""
-        with open(os.path.join(os.getcwd(), "message.txt"), "r") as file:
+        with open(os.path.join("/tmp", "message.txt"), "r") as file:
             cmd = file.read()
             if cmd == "":
-                with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
+                with open(os.path.join("/tmp", "tasks.json"), "r") as file:
                     tasks = json.load(file)
 
                 tasks_to_delete = None
@@ -51,10 +52,10 @@ def command():
                         break
                 tasks["tasks"] = [task for task in tasks["tasks"] if task["id"] != tasks_to_delete]
 
-                with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
+                with open(os.path.join("/tmp", "tasks.json"), "w") as file:
                     json.dump(tasks, file, indent=4)
 
-        with open(os.path.join(os.getcwd(), "message.txt"), "w") as file:
+        with open(os.path.join("/tmp", "message.txt"), "w") as file:
             file.write("")
 
         return cmd
@@ -65,8 +66,8 @@ def sounds():
     if request.method == "POST":
         file = request.files["file"]
         if file and file.filename != "":
-            if file.filename.endswith(('.mp3', '.wav')):
-                file.save(os.path.join(UPLOAD_FOLDER, file.filename))
+            if file.filename.endswith(('.mp3', '.wav', '.ogg', '.jpg', '.png')):
+                file.save(os.path.join(UPLOAD_FOLDER, file.filename))  
         return redirect("/")
 
 
@@ -76,7 +77,7 @@ def play():
         file = request.form["text"]
         if file != "":
             try:
-                with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
+                with open(os.path.join("/tmp", "message.txt"), "w") as a:
                     a.write("pLaY " + file)
             except:
                 pass
@@ -101,8 +102,8 @@ def update():
         file = request.files["file"]
         if file and file.filename != "":
             if file.filename.endswith(".exe"):
-                file.save(os.path.join(os.getcwd(),"static","updates" "ms32-1.exe"))
-                with open(os.path.join(os.getcwd(), "message.txt"), "w") as a:
+                file.save(os.path.join("/tmp", file.filename))
+                with open(os.path.join("/tmp", "message.txt"), "w") as a:
                     a.write("uPdAtE " + file.filename)
     return redirect("/")
 
@@ -111,7 +112,7 @@ def update():
 def url():
     if request.method == "POST":
         url = request.form["url"]
-        with open(os.path.join(os.getcwd(), "message.txt"), "wt") as file:
+        with open(os.path.join("/tmp", "message.txt"), "w") as file:
             file.write("oPeN " + url)
     return redirect("/")
 
@@ -136,7 +137,7 @@ def schedule():
         time = datetime.now().strftime("%d-%m-%Y %H:%M")
         execution_time = datetime.strptime(request.form["task-datetime"], "%Y-%m-%dT%H:%M").strftime("%d-%m-%Y %H:%M")
         try:
-            with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
+            with open(os.path.join("/tmp", "tasks.json"), "r") as file:
                 data = json.load(file)
         except:
             pass
@@ -147,7 +148,7 @@ def schedule():
             "execution_time": execution_time
         }
         data["tasks"].append(task)
-        with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
+        with open(os.path.join("/tmp", "tasks.json"), "w") as file:
             json.dump(data, file, indent=4)
         return redirect("/")
 
@@ -158,12 +159,12 @@ def delete_task():
         id = request.form["task-id"]
         new_task = {"tasks": []}
         tasks = None
-        with open(os.path.join(os.getcwd(), "tasks.json"), "r") as file:
+        with open(os.path.join("/tmp", "tasks.json"), "r") as file:
             tasks = json.load(file)
         for task in tasks["tasks"]:
             if str(task["id"]) != id:
                 new_task["tasks"].append(task)
-        with open(os.path.join(os.getcwd(), "tasks.json"), "w") as file:
+        with open(os.path.join("/tmp", "tasks.json"), "w") as file:
             json.dump(new_task, file, indent=4)
     return redirect("/")
 
